@@ -24,7 +24,7 @@ namespace StockTradingSimulator.Controllers
         [HttpGet]
         public IEnumerable<Stock> GetStock()
         {
-            return _context.Stock;
+            return _context.Stock.Include(s => s.Company);
         }
 
         // GET: api/Stocks/5
@@ -36,7 +36,7 @@ namespace StockTradingSimulator.Controllers
                 return BadRequest(ModelState);
             }
 
-            var stock = await _context.Stock.FindAsync(id);
+            var stock = await _context.Stock.Include(s => s.Company).FirstAsync(s => s.ID == id);
 
             if (stock == null)
             {

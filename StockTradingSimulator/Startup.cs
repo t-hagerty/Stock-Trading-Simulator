@@ -39,15 +39,6 @@ namespace StockTradingSimulator
                     .AllowCredentials());
             });
 
-            services.AddDbContext<CompanyContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("CompanyContext")));
-
-            services.AddDbContext<StockCandlesticksContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("StockCandlesticksContext")));
-
-            services.AddDbContext<OrdersContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("OrdersContext")));
-
             services.AddDbContext<StocksContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("StocksContext")));
         }

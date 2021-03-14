@@ -13,9 +13,9 @@ namespace StockTradingSimulator.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly CompanyContext _context;
+        private readonly StocksContext _context;
 
-        public CompaniesController(CompanyContext context)
+        public CompaniesController(StocksContext context)
         {
             _context = context;
         }

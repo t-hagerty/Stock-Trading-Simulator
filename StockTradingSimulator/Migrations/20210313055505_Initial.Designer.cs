@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockTradingSimulator.Models;
 
-namespace StockTradingSimulator.Migrations.Stocks
+namespace StockTradingSimulator.Migrations
 {
     [DbContext(typeof(StocksContext))]
-    [Migration("20210225053621_init")]
-    partial class init
+    [Migration("20210313055505_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,29 @@ namespace StockTradingSimulator.Migrations.Stocks
                     b.HasKey("ID");
 
                     b.ToTable("Company");
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.Order", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("CompanyID");
+
+                    b.Property<DateTime>("OrderPlacedTime");
+
+                    b.Property<decimal>("PriceLimit");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("StockTradingSimulator.Models.Stock", b =>
@@ -63,11 +86,54 @@ namespace StockTradingSimulator.Migrations.Stocks
                     b.ToTable("Stock");
                 });
 
+            modelBuilder.Entity("StockTradingSimulator.Models.StockCandlestick", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Close");
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<decimal>("High");
+
+                    b.Property<decimal>("Low");
+
+                    b.Property<decimal>("Open");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<int>("Volume");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("StockCandlestick");
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.Order", b =>
+                {
+                    b.HasOne("StockTradingSimulator.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("StockTradingSimulator.Models.Stock", b =>
                 {
                     b.HasOne("StockTradingSimulator.Models.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.StockCandlestick", b =>
+                {
+                    b.HasOne("StockTradingSimulator.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -11,8 +11,12 @@ namespace StockTradingSimulator.Models
         public StocksContext (DbContextOptions<StocksContext> options)
             : base(options)
         {
+            this.Database.Migrate();
         }
 
         public DbSet<StockTradingSimulator.Models.Stock> Stock { get; set; }
+        public DbSet<StockTradingSimulator.Models.Company> Company { get; set; }
+        public DbSet<StockTradingSimulator.Models.Order> Order { get; set; }
+        public DbSet<StockTradingSimulator.Models.StockCandlestick> StockCandlestick { get; set; }
     }
 }

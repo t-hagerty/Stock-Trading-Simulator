@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockTradingSimulator.Models;
 
-namespace StockTradingSimulator.Migrations.StockCandlesticks
+namespace StockTradingSimulator.Migrations
 {
-    [DbContext(typeof(StockCandlesticksContext))]
-    [Migration("20210225060815_init")]
-    partial class init
+    [DbContext(typeof(StocksContext))]
+    partial class StocksContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +34,54 @@ namespace StockTradingSimulator.Migrations.StockCandlesticks
                     b.HasKey("ID");
 
                     b.ToTable("Company");
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.Order", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("CompanyID");
+
+                    b.Property<DateTime>("OrderPlacedTime");
+
+                    b.Property<decimal>("PriceLimit");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.Stock", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("CompanyID");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<DateTime>("PurchasedTime");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<DateTime>("SoldTime");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.ToTable("Stock");
                 });
 
             modelBuilder.Entity("StockTradingSimulator.Models.StockCandlestick", b =>
@@ -63,6 +109,22 @@ namespace StockTradingSimulator.Migrations.StockCandlesticks
                     b.HasIndex("CompanyId");
 
                     b.ToTable("StockCandlestick");
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.Order", b =>
+                {
+                    b.HasOne("StockTradingSimulator.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("StockTradingSimulator.Models.Stock", b =>
+                {
+                    b.HasOne("StockTradingSimulator.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("StockTradingSimulator.Models.StockCandlestick", b =>

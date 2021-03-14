@@ -13,9 +13,9 @@ namespace StockTradingSimulator.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
-        private readonly OrdersContext _context;
+        private readonly StocksContext _context;
 
-        public OrdersController(OrdersContext context)
+        public OrdersController(StocksContext context)
         {
             _context = context;
         }
@@ -24,7 +24,7 @@ namespace StockTradingSimulator.Controllers
         [HttpGet]
         public IEnumerable<Order> GetOrder()
         {
-            return _context.Order;
+            return _context.Order.Include(o => o.Company);
         }
 
         // GET: api/Orders/5
@@ -36,7 +36,7 @@ namespace StockTradingSimulator.Controllers
                 return BadRequest(ModelState);
             }
 
-            var order = await _context.Order.FindAsync(id);
+            var order = await _context.Order.Include(o=>o.Company).FirstAsync(o=>o.ID == id);
 
             if (order == null)
             {

@@ -13,9 +13,9 @@ namespace StockTradingSimulator.Controllers
     [ApiController]
     public class StockCandlesticksController : ControllerBase
     {
-        private readonly StockCandlesticksContext _context;
+        private readonly StocksContext _context;
 
-        public StockCandlesticksController(StockCandlesticksContext context)
+        public StockCandlesticksController(StocksContext context)
         {
             _context = context;
         }
@@ -24,7 +24,7 @@ namespace StockTradingSimulator.Controllers
         [HttpGet]
         public IEnumerable<StockCandlestick> GetStockCandlestick()
         {
-            return _context.StockCandlestick;
+            return _context.StockCandlestick.Include(s => s.Company);
         }
 
         // GET: api/StockCandlesticks/5
@@ -36,7 +36,7 @@ namespace StockTradingSimulator.Controllers
                 return BadRequest(ModelState);
             }
 
-            var stockCandlestick = await _context.StockCandlestick.FindAsync(id);
+            var stockCandlestick = await _context.StockCandlestick.Include(s => s.Company).FirstAsync(s => s.ID == id);
 
             if (stockCandlestick == null)
             {
