@@ -46,6 +46,25 @@ namespace StockTradingSimulator.Controllers
             return Ok(company);
         }
 
+        // GET: api/Companies/Search/[search term]
+        [HttpGet("Search/{search}")]
+        public async Task<IActionResult> GetCompany([FromRoute] string search)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var company = await _context.Company.Where(c => c.CompanyName.Contains(search) || c.TickerSymbol.Contains(search)).ToListAsync();
+
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(company);
+        }
+
         // PUT: api/Companies/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompany([FromRoute] int id, [FromBody] Company company)
