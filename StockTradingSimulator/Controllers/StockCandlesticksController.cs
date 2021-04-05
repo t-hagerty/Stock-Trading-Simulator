@@ -46,6 +46,73 @@ namespace StockTradingSimulator.Controllers
             return Ok(stockCandlestick);
         }
 
+        // GET: api/StockCandlesticks/Company?ticker=TST
+        [HttpGet("Company")]
+        [ExactQueryParam("ticker")]
+        public async Task<IActionResult> GetStockCandlestick([FromQuery] string ticker)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var stockCandlestick = await _context.StockCandlestick.Where(s => s.Company.TickerSymbol == ticker).ToListAsync();
+
+            if (stockCandlestick == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stockCandlestick);
+        }
+
+        // GET: api/StockCandlesticks/Company?ticker=TST&since=2021-03-31
+        [HttpGet("Company")]
+        [ExactQueryParam("ticker", "since")]
+        public async Task<IActionResult> GetStockCandlestick([FromQuery] string ticker, [FromQuery] DateTime since)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var stockCandlestick = await _context.StockCandlestick.Where(s => s.Company.TickerSymbol == ticker && s.Timestamp >= since).ToListAsync();
+
+            if (stockCandlestick == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stockCandlestick);
+        }
+
+        // GET: api/StockCandlesticks/Company?ticker=TST&from=2021-03-31&to=2021-04-01
+        [HttpGet("Company")]
+        [ExactQueryParam("ticker", "from", "to")]
+        public async Task<IActionResult> GetStockCandlestick([FromQuery] string ticker, [FromQuery] DateTime from, [FromQuery] DateTime to)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (from > to)
+            {
+                var temp = from;
+                from = to;
+                to = temp;
+            }
+
+            var stockCandlestick = await _context.StockCandlestick.Where(s => s.Company.TickerSymbol == ticker && s.Timestamp >= from && s.Timestamp <= to).ToListAsync();
+
+            if (stockCandlestick == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(stockCandlestick);
+        }
+
         // PUT: api/StockCandlesticks/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStockCandlestick([FromRoute] int id, [FromBody] StockCandlestick stockCandlestick)
